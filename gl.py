@@ -59,8 +59,8 @@ class Render(object):
         self.yViewPort = y
 
     def glVertex(self, x,y):
-        calcX = int((x+1)*(self.viewPortWidth/2)+self.xViewPort)
-        calcY = int((y+1)*(self.viewPortHeight/2)+self.yViewPort)
+        calcX = round((x+1)*(self.viewPortWidth/2)+self.xViewPort)
+        calcY = round((y+1)*(self.viewPortHeight/2)+self.yViewPort)
         self.point(calcX, calcY)
 
 
@@ -95,7 +95,43 @@ class Render(object):
 
     #function dot
     def point(self, x, y):
-        self.framebuffer[x][y] = self.glColor(0.137254902,0.7607843137,0.3490196078)    
+        self.framebuffer[x][y] = self.glColor(0.01176470,0.583921569,0.9882352941)  
+
+    def glLine(self,x0, y0, x1, y1):
+        x0 = round((x0+1)*(self.viewPortWidth/2)+self.xViewPort)
+        y0 = round((y0+1)*(self.viewPortHeight/2)+self.yViewPort)
+        x1 = round((x1+1)*(self.viewPortWidth/2)+self.xViewPort)
+        y1 = round((y1+1)*(self.viewPortHeight/2)+self.yViewPort)
+        dy = abs(y1 - y0)
+        dx = abs(x1 - x0)
+
+        steep = dy > dx
+
+        if steep:
+            x0, y0 = y0, x0
+            x1, y1 = y1, x1
+
+        if x0 > x1:
+            x0, x1 = x1, x0
+            y0, y1 = y1, y0
+
+        dy = abs(y1 - y0)
+        dx = abs(x1 - x0)
+
+        offset = 0 
+        threshold =  dx
+        y = y0
+
+        for x in range(x0, x1):
+            if steep:
+                r.point(y, x)
+            else:
+                r.point(y, x)
+
+            offset +=   2 *dy
+            if offset >=threshold:
+                y += 1 if y0 < y1 else -1
+                threshold +=  2 * dx
 
         #Referencia del repositorio ejemplo de dennis
     def glFinish(self, filename='out.bmp'):
@@ -109,13 +145,24 @@ class Render(object):
         except ImportError:
           pass  # do nothing if no wand is installed
 
+    '''def load(self, filename='default.obj'):
+      model = Obj(filename)
+
+      for face in model.faces:
+        vcount = len(face)
+
+      for j in range(vcount):
+        vertex_index1 = face[j][0] -1
+        vertex_index1 = face[(j+1) % vcount][0] -1
+
+        v1 = model.vertices[vertex_index1]
+        v2 = model.vertices[vertex_index2]'''
 
 
-
-bitmap = Render()
-
-bitmap.glCreateWindow(100,200)
-bitmap.glClearcolor(0.3647058824, 0.137254902, 0.7607843137)
-bitmap.glViewport(5, 5, 75, 75)
-bitmap.glVertex( -1, -1)
-bitmap.glFinish()
+r = Render()
+r.glCreateWindow(100, 100)
+r.glClearcolor(0.75, 0.25, 0.39)
+r.glViewport(10, 10, 50, 50)
+r.glVertex(1, 1)
+#r.glLine(-1, -1, 1, 1)
+r.glFinish()
