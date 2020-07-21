@@ -1,14 +1,8 @@
-# Lab1-Graficas-SR1-Point
-Que los estudiantes preparen el ambiente de desarrollo que van a utilizar durante el resto del curso Que los estudiantes preparen el escritor de imágenes
+# Lab1-Graficas-SR2-Line
+Que los estudiantes preparen su algoritmo para el dibujado de líneas
+Que los estudiantes se familiaricen con el diseño y optimización de algoritmos de gráficas 
 
 **Maria Jose Castro Lemus**
 **181202**
 
-- glInit()
-- glCreateWindow(width, height) 
-- glViewPort(x, y, width, height) 
-- glClear() 
-- glClearColor(r, g, b)
-- glVertex(x, y) 
-- glColor(r, g, b) 
-- glFinish()
+- glLine(x0, y0, x1, y1)
