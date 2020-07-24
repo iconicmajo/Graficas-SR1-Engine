@@ -1,12 +1,14 @@
 # Lab1-Graficas-SR3-Models
+
+**Maria Jose Castro Lemus**
+**181202**
+
 El objetivo de la siguiente fase del renderizador por software es que pueda cargar modelos 3D básicos a nivel de wireframe. 
 
 Parte del objetivo de ésta tarea es probar los algoritmos de líneas en una variedad de casos de uso.
 
 Para obtener la nota completa de ésta tarea deben entregar lo siguiente:
 
-**Maria Jose Castro Lemus**
-**181202**
 
 - Código fuente capaz de cargar un archivo .obj al software renderer
 - Archivo obj de su elección 
