@@ -1,9 +1,11 @@
 #Maria Jose Castro Lemus 
 #181202
 #Graficas por Computadora - 10
-#Lab 1: SR1 Point
+#Lab 3: SR3 Models
 
 import struct 
+from vertices import Obj
+
 
 def char(c):
     return struct.pack('=c', c.encode('ascii'))
@@ -17,11 +19,7 @@ def color(r, g, b):
 
 class Render(object):
     def __init__(self):
-        #self.width = width
-        #self.height = height
         self.framebuffer =[]
-        #self.clear()
-        #self.glCreateWindow()
 
     def glInit(self):
         pass
@@ -59,9 +57,9 @@ class Render(object):
         self.yViewPort = y
 
     def glVertex(self, x,y):
-        calcX = round((x+1)*(self.viewPortWidth/2)+self.xViewPort)
-        calcY = round((y+1)*(self.viewPortHeight/2)+self.yViewPort)
-        self.point(calcX, calcY)
+        #calcX = round((x+1)*(self.viewPortWidth/2)+self.xViewPort)
+        #calcY = round((y+1)*(self.viewPortHeight/2)+self.yViewPort)
+        self.point(x, y)
 
 
     def write(self, filename):
@@ -95,13 +93,17 @@ class Render(object):
 
     #function dot
     def point(self, x, y):
-        self.framebuffer[x][y] = self.glColor(0.01176470,0.583921569,0.9882352941)  
+        try:
+            self.framebuffer[x][y] = self.glColor(0.01176470,0.583921569,0.9882352941)
+        except:
+            pass  
 
     def glLine(self,x0, y0, x1, y1):
-        x0 = round((x0+1)*(self.viewPortWidth/2)+self.xViewPort)
+        '''x0 = round((x0+1)*(self.viewPortWidth/2)+self.xViewPort)
         y0 = round((y0+1)*(self.viewPortHeight/2)+self.yViewPort)
         x1 = round((x1+1)*(self.viewPortWidth/2)+self.xViewPort)
-        y1 = round((y1+1)*(self.viewPortHeight/2)+self.yViewPort)
+        y1 = round((y1+1)*(self.viewPortHeight/2)+self.yViewPort)'''
+        #print(x0, y0, x1, y1)
         dy = abs(y1 - y0)
         dx = abs(x1 - x0)
 
@@ -121,12 +123,15 @@ class Render(object):
         offset = 0 
         threshold =  dx
         y = y0
+        inc = 1 if y1 > y0 else -1
 
         for x in range(x0, x1):
             if steep:
                 r.point(y, x)
+                
             else:
-                r.point(y, x)
+                r.point(x, y)
+                
 
             offset +=   2 *dy
             if offset >=threshold:
@@ -145,24 +150,29 @@ class Render(object):
         except ImportError:
           pass  # do nothing if no wand is installed
 
-    '''def load(self, filename='default.obj'):
+    def load(self, filename, translate, scale):
       model = Obj(filename)
 
       for face in model.faces:
         vcount = len(face)
 
       for j in range(vcount):
-        vertex_index1 = face[j][0] -1
-        vertex_index1 = face[(j+1) % vcount][0] -1
+        vertex_index1 = face[j][0] 
+        vertex_index2 = face[(j+1) % vcount][0]
 
-        v1 = model.vertices[vertex_index1]
-        v2 = model.vertices[vertex_index2]'''
+        v1 = model.vertices[vertex_index1 - 1]
+        v2 = model.vertices[vertex_index2 - 1]
+
+        x1 = round((v1[0] + translate[0]) * scale[0])
+        y1 = round((v1[1] + translate[1]) * scale[1])
+        x2 = round((v2[0] + translate[0]) * scale[0])
+        y2 = round((v2[1] + translate[1]) * scale[1])
+        print(x1, y1, x2, y2)
+        self.glLine(x1, y1, x2, y2)
 
 
 r = Render()
-r.glCreateWindow(100, 100)
+r.glCreateWindow(400, 800)
 r.glClearcolor(0.75, 0.25, 0.39)
-r.glViewport(10, 10, 50, 50)
-r.glVertex(-1, -1)
-r.glLine(-1, -1, 1, 1)
+r.load('lego-person.obj', [3, 0] ,[75,75])
 r.glFinish()
