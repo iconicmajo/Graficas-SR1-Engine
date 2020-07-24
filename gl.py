@@ -4,7 +4,8 @@
 #Lab 3: SR3 Models
 
 import struct 
-from vertices import Obj
+from obj import Obj
+
 
 
 def char(c):
@@ -57,9 +58,9 @@ class Render(object):
         self.yViewPort = y
 
     def glVertex(self, x,y):
-        #calcX = round((x+1)*(self.viewPortWidth/2)+self.xViewPort)
-        #calcY = round((y+1)*(self.viewPortHeight/2)+self.yViewPort)
-        self.point(x, y)
+        calcX = round((x+1)*(self.viewPortWidth/2)+self.xViewPort)
+        calcY = round((y+1)*(self.viewPortHeight/2)+self.yViewPort)
+        self.point(calcX, calcY)
 
 
     def write(self, filename):
@@ -86,7 +87,6 @@ class Render(object):
         #pixel data
         for x in range(self.width):
             for y in range(self.height):
-                    #print(self.width,' ', self.height,' hola')
                     f.write(self.framebuffer[y][x])
 
         f.close()
@@ -103,10 +103,9 @@ class Render(object):
         y0 = round((y0+1)*(self.viewPortHeight/2)+self.yViewPort)
         x1 = round((x1+1)*(self.viewPortWidth/2)+self.xViewPort)
         y1 = round((y1+1)*(self.viewPortHeight/2)+self.yViewPort)'''
-        #print(x0, y0, x1, y1)
+        #print('coordenadas',x0, y0, x1, y1)
         dy = abs(y1 - y0)
         dx = abs(x1 - x0)
-
         steep = dy > dx
 
         if steep:
@@ -120,59 +119,50 @@ class Render(object):
         dy = abs(y1 - y0)
         dx = abs(x1 - x0)
 
-        offset = 0 
-        threshold =  dx
-        y = y0
-        inc = 1 if y1 > y0 else -1
+        offset = 0
+        threshold = dx
 
+        y = y0
         for x in range(x0, x1):
             if steep:
-                r.point(y, x)
-                
+                self.point(y, x)
             else:
-                r.point(x, y)
-                
-
-            offset +=   2 *dy
-            if offset >=threshold:
+                self.point(x, y)
+            
+            offset += dy * 2
+            if offset >= threshold:
                 y += 1 if y0 < y1 else -1
-                threshold +=  2 * dx
+                threshold += dx * 2
 
         #Referencia del repositorio ejemplo de dennis
     def glFinish(self, filename='out.bmp'):
         self.write(filename)
-        try:
-          from wand.image import Image
-          from wand.display import display
-
-          with Image(filename=filename) as image:
-            display(image)
-        except ImportError:
-          pass  # do nothing if no wand is installed
 
     def load(self, filename, translate, scale):
       model = Obj(filename)
 
       for face in model.faces:
         vcount = len(face)
+        #print(vcount)
 
-      for j in range(vcount):
-        vertex_index1 = face[j][0] 
-        vertex_index2 = face[(j+1) % vcount][0]
+        for j in range(vcount):
+            f1 = face[j][0]
+            f2 = face[(j + 1) % vcount][0]
 
-        v1 = model.vertices[vertex_index1 - 1]
-        v2 = model.vertices[vertex_index2 - 1]
-
-        x1 = round((v1[0] + translate[0]) * scale[0])
-        y1 = round((v1[1] + translate[1]) * scale[1])
-        x2 = round((v2[0] + translate[0]) * scale[0])
-        y2 = round((v2[1] + translate[1]) * scale[1])
-        print(x1, y1, x2, y2)
-        self.glLine(x1, y1, x2, y2)
+            v1 = model.vertices[f1 - 1]
+            v2 = model.vertices[f2 - 1]
+            
+            x1 = round((v1[0] + translate[0]) * scale[0])
+            y1 = round((v1[1] + translate[1]) * scale[1])
+            x2 = round((v2[0] + translate[0]) * scale[0])
+            y2 = round((v2[1] + translate[1]) * scale[1])
+            print(x1, y1, x2, y2)
+            self.glLine(x1, y1, x2, y2)
 
 
 r = Render()
-r.glCreateWindow(400, 800)
+r.glCreateWindow(500, 500)
 r.glClearcolor(0.75, 0.25, 0.39)
+
 r.load('lego-person.obj', [3, 0] ,[75,75])
 r.glFinish()
