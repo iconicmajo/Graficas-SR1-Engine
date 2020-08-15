@@ -191,10 +191,10 @@ class Render(object):
         f.close()
 
     #function dot
-    def point(self, x, y,color):
+    def point(self, x, y,mycolor=None):
         try:
             #print(color)
-            self.framebuffer[x][y] = self.glColor(color[0],color[1],color[2])
+            self.framebuffer[x][y] = mycolor
         except:
             pass  
 
@@ -252,12 +252,6 @@ class Render(object):
                 try:
                     if z > self.zbuffer[x][y]:
                         self.point(x, y,selectColor)
-                        '''
-                            Para z's Color Map
-                            z = round(z % 255)
-                            zColor = color(z, z, z)
-                            self.point(x, y, zColor)
-                        '''
                         self.zbuffer[x][y] = z
                 except:
                     pass
@@ -296,11 +290,12 @@ class Render(object):
                 C = V3(x3, y3, z3)
 
                 normal = cross(sub(B, A), sub(C, A))
-                intensity = dot(normal, light)
-                grey = round(intensity / 255)
+                intensity = dot(norm(normal), light)
+                grey = round(255* intensity )
+                #print(grey)
                 if grey < 0:
-                    # Ignorar esta cara
                     continue
+
                 intensityColor = color(grey, grey, grey)
                 self.triangle(A, B, C, intensityColor)
                 #self.triangle(A, B, C, [0,0,0])
@@ -338,19 +333,20 @@ class Render(object):
                 D = V3(x4, y4, z4)
 
                 normal = cross(sub(B, A), sub(C, A))
-                intensity = dot(normal, light)
+                intensity = dot(norm(normal), light)
                 grey = round(intensity  *255)
+                #print(grey)
                 if grey < 0:
                     # Ignorar esta cara
                     continue
                 intensityColor = color(grey, grey, grey)
                 
-                #self.triangle(A, B, C, intensityColor)
+                self.triangle(A, B, C, intensityColor)
 
                 self.triangle(A, D, C, intensityColor)
 
 r = Render()
 r.glCreateWindow(1000, 1000)
-r.glClearcolor(0, 1, 1)
-r.load('sphere.obj', V3(500, 500, 0), V3(500, 500, 500))
+r.glClearcolor(0.75, 0.3, 0.26)
+r.load('lego-person.obj', V3(500, 100, 1), V3(200, 200, 200))
 r.glFinish()
