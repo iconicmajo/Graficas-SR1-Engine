@@ -397,7 +397,7 @@ class Render(object):
                 else:
                     uncolor = color(round(255 * intensity),0,0)
 
-                # color = self.active_texture.get_color(tx, ty, intensity)
+                #color = self.active_texture.get_color(tx, ty, intensity)
 
                 z = A.z * w + B.z * u + C.z * v
 
@@ -757,7 +757,7 @@ def gourad(render, **kwargs):
     # light intensity
     iA, iB, iC = [dot(n, render.light) for n in (nA, nB, nC)]
     intensity = w*iA + u*iB + v*iC
-
+    
     return color(
         int(tcolor[2] * intensity) if tcolor[0] * intensity > 0 else 0,
         int(tcolor[1] * intensity) if tcolor[1] * intensity > 0 else 0,
@@ -770,9 +770,8 @@ def fragment(render, **kwargs):
     w, v, u = kwargs['bar']
     # texture
     tx, ty = kwargs['texture_coords']
-    #tcolor = render.active_texture.get_color(tx, ty)
     grey = int(ty * 256)
-    tcolor = color(grey, 1, 1)
+    tcolor = color(grey, 66, 1)
     # normals
     nA, nB, nC = kwargs['varying_normals']
 
@@ -801,12 +800,36 @@ def fragment(render, **kwargs):
 
 r = Render()
 r.glCreateWindow(1000, 1000)
-#t = Texture('noche_grass.bmp')
-#r.framebuffer = t.pixels
-r.glClearcolor(0.11, 0.180, 0.49019)
+'''t = Texture('rsz_noche.bmp')
+r.active_texture = t
+r.lookAt(V3(1, 0, 5), V3(0, 0, 0), V3(0, 1, 0))
+r.framebuffer = t.pixels
+for y in range(len(t.pixels)):
+    for x in range(len(t.pixels[y])):
+        r.point(x, y, r.active_texture.get_color(y/1000, x/1000))
+#r.glFinish()'''
+
+#r.glClearcolor(0.11, 0.180, 0.49019)
+r.glClearcolor(1, 1, 1)
+
+
+#fondo
+t = Texture('rsz_noche.bmp')
+r.active_texture = t
+r.active_shader = gourad
+r.lookAt(V3(1, 0, 5), V3(0, 0, 0), V3(0, 1, 0))
+r.load3('cube-3d-shape.obj', V3(-0.9, 0, -5), V3(2.3, 2, 2), rotate=(0, 0, 0))
+r.draw_arrays('TRIANGLES')
+
+t = Texture('noche7.bmp')
+r.active_texture = t
+r.active_shader = gourad
+r.lookAt(V3(1, 0, 5), V3(0, 0, 0), V3(0, 1, 0))
+r.load3('wall.obj', V3(0, 0, 0), V3(1, 1, 1), rotate=(1, 0, 0))
+r.draw_arrays('TRIANGLES')
 
 #LUNA
-t = Texture('moon-texture.bmp')
+t = Texture('moon-yw.bmp')
 r.active_texture = t
 r.active_shader = gourad
 r.lookAt(V3(1, 0, 5), V3(0, 0, 0), V3(0, 1, 0))
@@ -817,7 +840,7 @@ r.draw_arrays('TRIANGLES')
 t = Texture('pumpkin.bmp')
 r.active_texture = t
 r.active_shader = gourad
-r.lookAt(V3(1, 0, 5), V3(0, 0, 0), V3(0, 1, 0))
+#r.lookAt(V3(1, 0, 5), V3(0, 0, 0), V3(0, 1, 0))
 r.load3('pumpkin.obj', V3(0.55, -0.70, 1), V3(0.06, 0.06, 0.06), rotate=(0, 0.25, 0))
 r.draw_arrays('TRIANGLES')
 
@@ -826,8 +849,8 @@ t = Texture('tree-texture.bmp')
 r.active_texture = t
 r.active_shader = gourad
 
-#r.load3('deadtree.obj', V3(0.85, -0.7, 0), V3(0.06, 0.06, 0.06), rotate=(0, -1, 0))
-#r.draw_arrays('TRIANGLES')
+r.load3('deadtree.obj', V3(0.85, -0.7, 0), V3(0.06, 0.06, 0.06), rotate=(0, -1, 0))
+r.draw_arrays('TRIANGLES')
 
 r.load3('deadtree.obj', V3(-0.40, -0.70, 1), V3(0.06, 0.06, 0.06), rotate=(0, 0, -0.1))
 r.draw_arrays('TRIANGLES')
@@ -836,34 +859,34 @@ r.load3('deadtree.obj', V3(-0.60, -0.70, 1), V3(0.06, 0.06, 0.06), rotate=(0, -1
 r.draw_arrays('TRIANGLES')
 
 #Valla
-r.load3('fence-wood.obj', V3(-0.3, -0.8, 0), V3(0.003, 0.003, 0.003), rotate=(0, 0, 0)) #rotate this or other fence  rotate=(3, 3.2, 2)
+r.load3('fence-wood.obj', V3(-0.1, -0.8, 1.2), V3(0.003, 0.003, 0.003), rotate=(-1, 0, 1.5)) #rotate this or other fence  rotate=(3, 3.2, 2)
 r.draw_arrays('TRIANGLES')
 
-'''r.load3('broken-fence.obj', V3(0, 0, 0), V3(1, 1, 1), rotate=(0, 0, 0)) #rotate this or other fence  rotate=(3, 3.2, 2)
-r.draw_arrays('TRIANGLES')'''
+#r.load3('broken-fence.obj', V3(0, 0, 0), V3(1, 1, 1), rotate=(0, 0, 0)) #rotate this or other fence  rotate=(3, 3.2, 2)
+#r.draw_arrays('TRIANGLES')
 
 #Murcielagos
-'''t = Texture('bat-t.bmp')
+t = Texture('cuero_texture.bmp')
 r.active_texture = t
-r.active_shader = fragment
-r.load3('bat.obj', V3(0, -0.2, 0), V3(0.045, 0.045, 0.045), rotate=(0, 0, 0))
+r.active_shader = gourad
+r.load3('bat.obj', V3(0, -0.17, 0), V3(0.04, 0.04, 0.04), rotate=(0, 0, 0))
 r.draw_arrays('TRIANGLES')
 
 r.load3('bat.obj', V3(0.65, 0.6, 0), V3(0.03, 0.03, 0.03), rotate=(0, 0, 0))
-r.draw_arrays('TRIANGLES')'''
+r.draw_arrays('TRIANGLES')
 
 #Tumbas
-'''t = Texture('rip-texture.bmp')
+t = Texture('rip-texture2.bmp')
 r.active_texture = t
-r.active_shader = fragment
+r.active_shader = gourad
 r.load3('rip.obj', V3(0.5, -0.8, 0), V3(0.05, 0.05, 0.05), rotate=(0, 0.8, 0))
 r.draw_arrays('TRIANGLES')
 
 t = Texture('rip-texture2.bmp')
 r.active_texture = t
-r.active_shader = fragment
+r.active_shader = gourad
 r.load3('rip.obj', V3(-0.1, -0.77, 0), V3(0.045, 0.045, 0.045), rotate=(0, 0.5, 0))
-r.draw_arrays('TRIANGLES')'''
+r.draw_arrays('TRIANGLES')
 
 #Calabera
 t = Texture('skull-texture.bmp')
