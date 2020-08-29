@@ -800,21 +800,24 @@ def fragment(render, **kwargs):
 
 r = Render()
 r.glCreateWindow(1000, 1000)
-'''t = Texture('rsz_noche.bmp')
+r.glClearcolor(1, 1, 1)
+t = Texture('rsz_noche.bmp')
 r.active_texture = t
 r.lookAt(V3(1, 0, 5), V3(0, 0, 0), V3(0, 1, 0))
-r.framebuffer = t.pixels
+#r.framebuffer = t.pixels
+#r.draw_arrays('TRIANGLES')
+
 for y in range(len(t.pixels)):
     for x in range(len(t.pixels[y])):
         r.point(x, y, r.active_texture.get_color(y/1000, x/1000))
-#r.glFinish()'''
+#r.glFinish()
 
 #r.glClearcolor(0.11, 0.180, 0.49019)
-r.glClearcolor(1, 1, 1)
+#r.glClearcolor(1, 1, 1)
 
 
 #fondo
-t = Texture('rsz_noche.bmp')
+'''t = Texture('rsz_noche.bmp')
 r.active_texture = t
 r.active_shader = gourad
 r.lookAt(V3(1, 0, 5), V3(0, 0, 0), V3(0, 1, 0))
@@ -826,7 +829,7 @@ r.active_texture = t
 r.active_shader = gourad
 r.lookAt(V3(1, 0, 5), V3(0, 0, 0), V3(0, 1, 0))
 r.load3('wall.obj', V3(0, 0, 0), V3(1, 1, 1), rotate=(1, 0, 0))
-r.draw_arrays('TRIANGLES')
+r.draw_arrays('TRIANGLES')'''
 
 #LUNA
 t = Texture('moon-yw.bmp')
@@ -837,7 +840,7 @@ r.load3('sphere.obj', V3(0, 0.4, 0), V3(0.9, 0.9, 0.9), rotate=(0, -0.3, 0))
 r.draw_arrays('TRIANGLES')
 
 #Calabaza
-t = Texture('pumpkin.bmp')
+'''t = Texture('pumpkin.bmp')
 r.active_texture = t
 r.active_shader = gourad
 #r.lookAt(V3(1, 0, 5), V3(0, 0, 0), V3(0, 1, 0))
@@ -893,6 +896,6 @@ t = Texture('skull-texture.bmp')
 r.active_texture = t
 r.active_shader = gourad
 r.load3('skull.obj', V3(-0.05, -0.7, 1), V3(0.09, 0.09, 0.09), rotate=(0, -0.5, 0))
-r.draw_arrays('TRIANGLES')
+r.draw_arrays('TRIANGLES')'''
 
 r.glFinish()
