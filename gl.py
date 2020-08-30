@@ -134,6 +134,7 @@ class Render(object):
         self.active_vertex_array = []
         self.active_texture = None
         self.active_shader = None
+        #self.active_shader = 'Moon'
         self.light = V3(0,0,1)
 
     def glInit(self):
@@ -649,30 +650,6 @@ class Render(object):
                     self.triangle4()
             except StopIteration:
                 print('Done.')
-
-    def shadersLuna(self, A, intensity):
-        d = random.randint(0, 100)
-        if A.x > 100 + d and A.x < 600 - d and A.y >= 325 + d and A.y < 700 - d:
-            color1 = color(34, 72, 140)
-            color2 = color(34, 72, 140)
-            color3 = color(34, 72, 140)
-        elif A.x > 600 - d and A.x < 800 - d and A.y >= 600 - d and A.y < 800 - d:
-            color1 = color(34, 72, 140)
-            color2 = color(34, 72, 140)
-            color3 = color(34, 72, 140)
-        elif A.x > 100 + d and A.x < 800 - d and A.y >= 700 and A.y < 800:
-            color1 = color(72, 228, 210)
-            color2 = color(90, 227, 220)
-            color3 = color(103, 232, 230)
-        elif A.x > 100 and A.x < 800 and A.y >= 0 and A.y < 275 + d:
-            color1 = color(72, 228, 210)
-            color2 = color(90, 227, 220)
-            color3 = color(103, 232, 230)
-        else:
-            color1 = color(125, 195, 95)
-            color2 = color(125, 195, 95)
-            color3 = color(125, 195, 95)
-        return color1, color2, color3
             
 
     def loadModelMatrix(self, translate, scale, rotate):
@@ -795,7 +772,7 @@ def fragment(render, **kwargs):
     # texture
     tx, ty = kwargs['texture_coords']
     grey = int(ty * 256)
-    tcolor = color(grey, 66, 1)
+    tcolor = color(grey, 150, 150)
     # normals
     nA, nB, nC = kwargs['varying_normals']
 
@@ -822,6 +799,10 @@ def fragment(render, **kwargs):
         int(tcolor[0] * intensity) if tcolor[2] * intensity > 0 else 0
     )
 
+print('ADVERTENCIA: TARDA MUCHO!')
+print('Los modelos de los mucierlagos pesan mucho')
+print('Si comenta las lineas de esos modelos, corre mas rapido jeje')
+
 r = Render()
 r.glCreateWindow(1000, 1000)
 r.glClearcolor(1, 1, 1)
@@ -840,11 +821,12 @@ for y in range(len(t.pixels)):
 #r.glClearcolor(1, 1, 1)
 
 #LUNA
-t = Texture('moon-yw.bmp')
+#t = Texture('intneto mil.bmp')
+t = Texture('i7.bmp')
 r.active_texture = t
 r.active_shader = gourad
 r.lookAt(V3(1, 0, 5), V3(0, 0, 0), V3(0, 1, 0))
-r.load3('sphere.obj', V3(0, 0.4, 0), V3(0.9, 0.9, 0.9), rotate=(0, -0.3, 0))
+r.load3('sphere.obj', V3(0, 0.4, 0), V3(0.9, 0.9, 0.9), rotate=(0, -0.5, 0))
 r.draw_arrays('TRIANGLES')
 
 #r.active_shader = 'LUNA'
@@ -879,14 +861,14 @@ r.load3('fence-wood.obj', V3(-0.1, -0.8, 1.2), V3(0.003, 0.003, 0.003), rotate=(
 r.draw_arrays('TRIANGLES')
 
 #Murcielagos
-'''t = Texture('cuero_texture.bmp')
+t = Texture('cuero_texture.bmp')
 r.active_texture = t
 r.active_shader = gourad
-r.load3('bat.obj', V3(0, -0.17, 0), V3(0.04, 0.04, 0.04), rotate=(0, 0, 0))
+r.load3('bat.obj', V3(0, -0.12, 0), V3(0.04, 0.04, 0.04), rotate=(0, 0, 0))
 r.draw_arrays('TRIANGLES')
 
 r.load3('bat.obj', V3(0.65, 0.6, 0), V3(0.03, 0.03, 0.03), rotate=(0, 0, 0))
-r.draw_arrays('TRIANGLES')'''
+r.draw_arrays('TRIANGLES')
 
 #Tumbas
 t = Texture('rip-texture2.bmp')
