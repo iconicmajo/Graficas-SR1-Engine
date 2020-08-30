@@ -5,6 +5,6 @@ Los estudiantes deben entregar un software que lea archivos obj y realice un ren
 
 **Maria Jose Castro Lemus**
 **181202**
-
+Si mira comit de mcastro99 no cambie mi user de git del trabajo ups jejeje
 - Tenemos una escena de noche tipo Halloween 
 ![Image of Yaktocat](https://github.com/iconicmajo/Graficas-SR1-Engine/blob/Final-Render/imagen.PNG)
