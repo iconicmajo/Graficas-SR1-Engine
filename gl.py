@@ -1,7 +1,7 @@
 #Maria Jose Castro Lemus 
 #181202
 #Graficas por Computadora - 10
-#Lab 3: SR3 Models
+#Proyecto Render IMG
 
 # https://www.it-swarm.dev/es/python/python-3-multiplicar-un-vector-por-una-matriz-sin-numpy/1051381438/
 
@@ -134,7 +134,6 @@ class Render(object):
         self.active_vertex_array = []
         self.active_texture = None
         self.active_shader = None
-        #self.active_shader = 'Moon'
         self.light = V3(0,0,1)
 
     def glInit(self):
@@ -264,92 +263,6 @@ class Render(object):
     def glFinish(self, filename='out.bmp'):
         self.write(filename)
 
-    def triangle(self, A, B, C, selectColor):
-        xmin, xmax, ymin, ymax = bbox(A, B, C)
-        for x in range(xmin, xmax + 1):
-            for y in range(ymin, ymax + 1):
-                P = V2(x, y)
-                w, v, u = barycentric(A, B, C, P)
-                if w < 0 or v < 0 or u < 0:
-                    continue
-                
-                z = A.z * w + B.z * u + C.z * v
-                
-                try:
-                    if z > self.zbuffer[x][y]:
-                        self.point(x, y,selectColor)
-                        self.zbuffer[x][y] = z
-                except:
-                    pass
-
-    def triangle2(self, A, B, C, color=None, texture=None, texture_coords=(), intensity=1):
-        xmin, xmax, ymin, ymax = bbox(A, B, C)
-
-        for x in range(xmin, xmax + 1):
-            for y in range(ymin, ymax + 1):
-                w, v, u = barycentric(A, B, C, V2(x, y))
-                if w < 0 or v < 0 or u < 0:  # 0 is actually a valid value! (it is on the edge)
-                    continue
-                
-                if texture:
-                    tA, tB, tC = texture_coords
-                    tx = tA.x * w + tB.x * v + tC.x * u
-                    ty = tA.y * w + tB.y * v + tC.y * u
-                
-                    color = texture.get_color(tx, ty, intensity)
-
-                z = A.z * w + B.z * v + C.z * u
-
-                if x < 0 or y < 0:
-                    continue
-                
-                try:
-                    if x < len(self.zbuffer) and y < len(self.zbuffer[x]) and z > self.zbuffer[x][y]:
-                        self.point(x, y, color)
-                        self.zbuffer[x][y] = z
-                except:
-                    pass 
-
-    def triangle3(self):
-        A = next(self.active_vertex_array)
-        B = next(self.active_vertex_array)
-        C = next(self.active_vertex_array)
-        # print(A,B,C)
-
-        if self.active_texture:
-            tA = next(self.active_vertex_array)
-            tB = next(self.active_vertex_array)
-            tC = next(self.active_vertex_array)
-
-        xmin, xmax, ymin, ymax = bbox(A, B, C)
-
-        normal = norm(cross(sub(B, A), sub(C, A)))
-        intensity = dot(normal, self.light)
-        if intensity < 0:
-            return
-
-        for x in range(xmin, xmax + 1):
-            for y in range(ymin, ymax + 1):
-                w, v, u = barycentric(A, B, C, V2(x, y))
-                if w < 0 or v < 0 or u < 0:  # 0 is actually a valid value! (it is on the edge)
-                    continue
-
-                if self.active_texture:
-                    tx = tA.x * w + tB.x * u + tC.x * v
-                    ty = tA.y * w + tB.y * u + tC.y * v
-
-                    color = self.active_texture.get_color(tx, ty, intensity)
-
-                z = A.z * w + B.z * u + C.z * v
-
-                if x < 0 or y < 0:
-                    continue
-
-                if x < len(self.zbuffer) and y < len(self.zbuffer[x]) and z > self.zbuffer[y][x]:
-                    self.point(x, y, color)
-                    self.zbuffer[y][x] = z
-
-
     def triangle4(self):
         A = next(self.active_vertex_array)
         B = next(self.active_vertex_array)
@@ -362,13 +275,9 @@ class Render(object):
             tB = next(self.active_vertex_array)
             tC = next(self.active_vertex_array)
 
-            #print("vt",tA,tB, tC)
-
             nA = next(self.active_vertex_array)
             nB = next(self.active_vertex_array)
             nC = next(self.active_vertex_array)
-
-            #print("vn",nA,nB, nC)
 
         xmin, xmax, ymin, ymax = bbox(A, B, C)
 
@@ -397,8 +306,6 @@ class Render(object):
                 
                 else:
                     uncolor = color(round(255 * intensity),0,0)
-
-                #color = self.active_texture.get_color(tx, ty, intensity)
 
                 z = A.z * w + B.z * u + C.z * v
 
@@ -649,7 +556,7 @@ class Render(object):
                     #print('LLEGO AQUI')
                     self.triangle4()
             except StopIteration:
-                print('Done.')
+                print('Modelo Listo.')
             
 
     def loadModelMatrix(self, translate, scale, rotate):
@@ -815,10 +722,6 @@ r.lookAt(V3(1, 0, 5), V3(0, 0, 0), V3(0, 1, 0))
 for y in range(len(t.pixels)):
     for x in range(len(t.pixels[y])):
         r.point(x, y, r.active_texture.get_color(y/1000, x/1000))
-#r.glFinish()
-
-#r.glClearcolor(0.11, 0.180, 0.49019)
-#r.glClearcolor(1, 1, 1)
 
 #LUNA
 #t = Texture('intneto mil.bmp')
@@ -828,9 +731,6 @@ r.active_shader = gourad
 r.lookAt(V3(1, 0, 5), V3(0, 0, 0), V3(0, 1, 0))
 r.load3('sphere.obj', V3(0, 0.4, 0), V3(0.9, 0.9, 0.9), rotate=(0, -0.5, 0))
 r.draw_arrays('TRIANGLES')
-
-#r.active_shader = 'LUNA'
-#r.load('sphere.obj', V3(0, 0.4, 0), V3(0.9, 0.9, 0.9))
 
 #Calabaza
 t = Texture('pumpkin.bmp')
@@ -856,8 +756,7 @@ r.draw_arrays('TRIANGLES')
 
 #Valla
 
-r.load3('fence-wood.obj', V3(-0.1, -0.8, 1.2), V3(0.003, 0.003, 0.003), rotate=(-1, 0, 1.5)) #rotate this or other fence  rotate=(3, 3.2, 2)
-#r.load3('fence-wood.obj', V3(-0.1, -0.8, 1.2), V3(0.003, 0.003, 0.003), rotate=(0, 0, 0)) #rotate this or other fence  rotate=(3, 3.2, 2)
+r.load3('fence-wood.obj', V3(-0.1, -0.8, 1.2), V3(0.003, 0.003, 0.003), rotate=(-1, 0, 1.5)) 
 r.draw_arrays('TRIANGLES')
 
 #Murcielagos
