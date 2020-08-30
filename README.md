@@ -7,4 +7,4 @@ Los estudiantes deben entregar un software que lea archivos obj y realice un ren
 **181202**
 
 - Tenemos una escena de noche tipo Halloween 
-![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
+![Image of Yaktocat](https://github.com/iconicmajo/Graficas-SR1-Engine/blob/Final-Render/imagen.PNG)
